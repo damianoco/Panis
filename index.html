@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panis Angelicus</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">
+<style>
+:root{--bg:#eef1f7;--panel:#f9fafd;--ink:#1b2340;--mute:#5b6485;--line:#cfd6e6;--accent:#2f4ba0;--sel:#dfe6fa;--serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;--sans:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10162c;--panel:#18203d;--ink:#e8ebf8;--mute:#9aa4c8;--line:#2c3860;--accent:#9db3ff;--sel:#26336a}}
+:root[data-theme="dark"]{--bg:#10162c;--panel:#18203d;--ink:#e8ebf8;--mute:#9aa4c8;--line:#2c3860;--accent:#9db3ff;--sel:#26336a}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);display:flex;flex-direction:column;gap:10px;padding:10px}
+.pane{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow-y:auto;min-height:0}
+#top{flex:1 1 46%}
+#bottom{flex:1 1 54%;padding:16px 18px;touch-action:pan-y;overflow-x:hidden}
+.stanza{padding:6px 0}
+.stanza+.stanza{border-top:1px solid var(--line)}
+.row{display:block;width:100%;text-align:left;background:none;border:0;border-left:4px solid transparent;color:var(--ink);font-family:var(--serif);font-size:1.5rem;font-weight:500;line-height:1.25;padding:7px 16px;cursor:pointer}
+.row:hover{background:var(--sel)}
+.row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.row[aria-pressed="true"]{background:var(--sel);border-left-color:var(--accent);font-weight:600}
+.latin{font-family:var(--serif);font-style:italic;font-size:1.4rem;color:var(--mute);margin:0 0 4px}
+.simple{font-family:var(--serif);font-size:1.75rem;font-weight:600;line-height:1.2;margin:0 0 6px}
+.note{font-size:1.15rem;color:var(--mute);line-height:1.45;margin:0 0 14px}
+dl{margin:0;display:grid;grid-template-columns:max-content 1fr;column-gap:16px;row-gap:8px;align-items:baseline}
+dt{font-family:var(--serif);font-size:1.5rem;font-weight:600;color:var(--accent)}
+dd{margin:0;font-size:1.2rem;line-height:1.35}
+dd small{display:block;color:var(--mute);font-size:1.05rem}
+.pron{font-size:1.25rem;font-weight:600;color:var(--accent);letter-spacing:.02em;margin:0 0 10px}
+dt small{display:block;font-family:var(--sans);font-size:1rem;font-weight:500;color:var(--mute)}
+.key{font-size:1rem;color:var(--mute);line-height:1.4;margin:14px 0 0}
+.hint{color:var(--mute);margin:0;font-size:1.15rem}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px}.head .latin{margin:0}.nav{display:flex;gap:8px;flex:none}
+.nav button{font:inherit;font-size:1.2rem;line-height:1;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;min-width:44px;padding:8px 12px;cursor:pointer}
+.nav button:focus-visible{outline:2px solid var(--accent)}
+.nav button:disabled{opacity:.4;cursor:default}
+</style>
+</head>
+<body>
+<main id="top" class="pane" aria-label="Latin text"></main>
+<section id="bottom" class="pane" aria-live="polite"></section>
+<script>
+const stanzas=[
+[
+{l:"Panis angelicus",t:"The bread of angels",n:"Opening phrase; angelicus is an adjective agreeing with panis.",w:[["Panis","bread","nominative singular"],["angelicus","angelic, of angels","adjective"]]},
+{l:"fit panis hominum;",t:"becomes the bread of men;",n:"Fit is from fieri, “to become”.",w:[["fit","becomes","fieri, 3rd person singular"],["panis","bread","nominative"],["hominum","of men","genitive plural"]]},
+{l:"Dat panis caelicus",t:"The heavenly bread gives",n:"The sentence continues on the next line.",w:[["Dat","gives","dare, 3rd person singular"],["panis","bread","nominative"],["caelicus","heavenly","adjective"]]},
+{l:"figuris terminum:",t:"an end to the symbols:",n:"The old Old Testament “figures” or foreshadowings are brought to an end.",w:[["figuris","to the figures, to the symbols","dative plural"],["terminum","an end, a limit","accusative singular"]]},
+{l:"O res mirabilis!",t:"O wondrous thing!",n:"An exclamation of awe.",w:[["O","O","interjection"],["res","thing","nominative singular"],["mirabilis","wondrous, marvellous","adjective"]]},
+{l:"Manducat Dominum",t:"The Lord is eaten by",n:"Literally “eats the Lord”; the subject follows on the next line.",w:[["Manducat","eats","manducare, 3rd person singular"],["Dominum","the Lord","accusative singular"]]},
+{l:"Pauper, servus et humilis.",t:"the poor, the servant and the lowly.",n:"Read with the line before: the poor, the servant and the lowly eat the Lord.",w:[["Pauper","the poor man","nominative"],["servus","the servant","nominative"],["et","and","conjunction"],["humilis","the lowly one","nominative"]]}
+],[
+{l:"Te trina Deitas",t:"You, threefold Godhead,",n:"Te is the object of poscimus.",w:[["Te","you","accusative"],["trina","threefold","adjective"],["Deitas","Godhead, Deity","nominative"]]},
+{l:"unaque poscimus:",t:"and one, we beseech:",n:"The ending -que means “and”, attached to una.",w:[["una","one","feminine, agrees with Deitas"],["-que","and","attached to the word before"],["poscimus","we ask, we beseech","poscere, 1st person plural"]]},
+{l:"Sic nos tu visita,",t:"So visit us,",n:"Visita is a command.",w:[["Sic","so, thus","adverb"],["nos","us","accusative"],["tu","you","nominative"],["visita","visit!","imperative singular"]]},
+{l:"sicut te colimus;",t:"as we worship you;",n:"Colimus is from colere, “to tend, honour, worship”.",w:[["sicut","as, just as","conjunction"],["te","you","accusative"],["colimus","we worship","colere, 1st person plural"]]},
+{l:"Per tuas semitas",t:"Through your paths",n:"Per takes the accusative.",w:[["Per","through","preposition"],["tuas","your","accusative feminine plural"],["semitas","paths, byways","accusative plural"]]},
+{l:"duc nos quo tendimus,",t:"lead us where we are heading,",n:"Duc is a command, from ducere.",w:[["duc","lead!","imperative singular"],["nos","us","accusative"],["quo","to where","adverb"],["tendimus","we are heading, we strive","tendere, 1st person plural"]]},
+{l:"Ad lucem quam inhabitas.",t:"to the light in which you dwell.",n:"Literally “to the light which you inhabit”.",w:[["Ad","to, toward","preposition"],["lucem","light","accusative singular"],["quam","which","relative pronoun, accusative"],["inhabitas","you dwell in","inhabitare, 2nd person singular"]]}
+]];
+const lines=stanzas.flat();
+const LP=['PAH-nees ahn-JEH-lee-koos','feet PAH-nees OH-mee-noom','daht PAH-nees CHEH-lee-koos','fee-GOO-rees TEHR-mee-noom','oh rehs mee-RAH-bee-lees','mahn-DOO-kaht DOH-mee-noom','POW-pehr SEHR-voos eht OO-mee-lees','teh TREE-nah DEH-ee-tahs','OO-nah-kweh POH-shee-moos','seek nohs too VEE-zee-tah','SEE-koot teh KOH-lee-moos','pehr TOO-ahs SEH-mee-tahs','dook nohs kwoh TEHN-dee-moos','ahd LOO-chehm kwahm een-AH-bee-tahs'];
+const PR={panis:'PAH-nees',angelicus:'ahn-JEH-lee-koos',fit:'feet',hominum:'OH-mee-noom',dat:'daht',caelicus:'CHEH-lee-koos',figuris:'fee-GOO-rees',terminum:'TEHR-mee-noom',o:'oh',res:'rehs',mirabilis:'mee-RAH-bee-lees',manducat:'mahn-DOO-kaht',dominum:'DOH-mee-noom',pauper:'POW-pehr',servus:'SEHR-voos',et:'eht',humilis:'OO-mee-lees',te:'teh',trina:'TREE-nah',deitas:'DEH-ee-tahs',una:'OO-nah',que:'kweh',poscimus:'POH-shee-moos',sic:'seek',nos:'nohs',tu:'too',visita:'VEE-zee-tah',sicut:'SEE-koot',colimus:'KOH-lee-moos',per:'pehr',tuas:'TOO-ahs',semitas:'SEH-mee-tahs',duc:'dook',quo:'kwoh',tendimus:'TEHN-dee-moos',ad:'ahd',lucem:'LOO-chehm',quam:'kwahm',inhabitas:'een-AH-bee-tahs'};
+const topPane=document.getElementById('top'),bot=document.getElementById('bottom');
+let cur=-1,i=0;
+stanzas.forEach(s=>{
+  const d=document.createElement('div');d.className='stanza';
+  s.forEach(L=>{
+    const b=document.createElement('button');b.className='row';b.type='button';
+    b.textContent=L.l;b.setAttribute('aria-pressed','false');
+    const idx=i++;b.dataset.i=idx;b.onclick=()=>pick(idx);
+    d.appendChild(b);
+  });
+  topPane.appendChild(d);
+});
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function pick(n){
+  const prevIdx=cur;cur=n;const L=lines[n];
+  topPane.querySelectorAll('.row').forEach(r=>r.setAttribute('aria-pressed',String(+r.dataset.i===n)));
+  topPane.querySelector('.row[data-i="'+n+'"]').scrollIntoView({block:'nearest'});
+  bot.innerHTML='<div class="head"><p class="latin">'+esc(L.l)+'</p><div class="nav"><button id="prev" type="button" aria-label="Previous line">&lt;</button><button id="next" type="button" aria-label="Next line">&gt;</button></div></div><p class="pron">'+esc(LP[n])+'</p><p class="simple">'+esc(L.t)+'</p><p class="note">'+esc(L.n)+'</p><dl>'+
+    L.w.map(w=>'<dt>'+esc(w[0])+'<small>'+esc(PR[w[0].toLowerCase().replace('-','')]||'')+'</small></dt><dd>'+esc(w[1])+'<small>'+esc(w[2])+'</small></dd>').join('')+
+    '</dl><p class="key">Church Latin, as sung. Stressed syllable in capitals. ah as in “father”, eh as in “bed”, oo as in “food”, ee as in “see”, ch as in “church”, kw as in “quick”.</p>';
+  document.getElementById('prev').disabled=n===0;
+  document.getElementById('next').disabled=n===lines.length-1;
+  document.getElementById('prev').onclick=()=>pick(n-1);
+  document.getElementById('next').onclick=()=>pick(n+1);
+  bot.scrollTop=0;
+  const w=document.createElement('div');
+  while(bot.firstChild)w.appendChild(bot.firstChild);
+  bot.appendChild(w);
+  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches&&w.animate){
+    const dir=prevIdx<0?0:(n>prevIdx?1:-1);
+    w.animate([{transform:'translateX('+(dir*48)+'px)',opacity:0},{transform:'translateX(0)',opacity:1}],{duration:240,easing:'ease-out'});
+  }
+}
+bot.innerHTML='<p class="hint">Tap a line above to see its meaning and each word. Swipe here to move between lines.</p>';
+let sx=0,sy=0;
+bot.addEventListener('touchstart',e=>{const t=e.changedTouches[0];sx=t.clientX;sy=t.clientY},{passive:true});
+bot.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(cur<0||Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy)*1.5)return;if(dx<0&&cur<lines.length-1)pick(cur+1);if(dx>0&&cur>0)pick(cur-1)},{passive:true});
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'&&cur<lines.length-1){e.preventDefault();pick(cur+1)}
+  if(e.key==='ArrowUp'&&cur>0){e.preventDefault();pick(cur-1)}
+});
+</script>
+</body>
+</html>
